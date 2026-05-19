@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="light" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>عربة التسوق - لبيب المختص</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary": "#5d5f5f",
+                        "surface": "#fbf9f9",
+                        "surface-variant": "#e4e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f5f3f3",
+                        "on-surface": "#1b1c1c",
+                        "on-surface-variant": "#4c4546",
+                        "outline-variant": "#cfc4c5",
+                        "error": "#ba1a1a",
+                    },
+                    spacing: {
+                        "xs": "0.5rem", "sm": "1rem", "md": "1.5rem", "lg": "2.5rem", "xl": "4rem", "gutter": "1.5rem", "container-max": "1280px"
+                    },
+                    fontFamily: {
+                        "sans": ["Lexend", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Lexend', sans-serif; }
+        .ambient-shadow { box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05); }
+        .cart-badge {
+            position: absolute; top: -5px; right: -5px; background: red; color: white;
+            border-radius: 50%; width: 16px; height: 16px; font-size: 10px;
+            display: none; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col pb-24 md:pb-12 pt-28">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-white border-b border-surface-container-high h-24 flex items-center px-4 md:px-8 rtl">
+        
+        <!-- Right side (Desktop: Nav, Mobile: Logo) -->
+        <div class="flex-1 flex items-center justify-start">
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="flex items-center gap-2 text-[18px] md:text-[22px] font-medium text-on-surface hover:text-primary transition-colors" href="index.html">
+                    <span class="material-symbols-outlined text-[24px] md:text-[28px]">home</span>
+                    <span>الرئيسية</span>
+                </a>
+                <a class="flex items-center gap-2 text-[18px] md:text-[22px] font-medium text-on-surface hover:text-primary transition-colors relative" href="cart.html">
+                    <span class="material-symbols-outlined text-[24px] md:text-[28px]">local_mall</span>
+                    <span>عربة التسوق</span>
+                    <span class="cart-badge absolute -top-2 -right-3" style="z-index: 10;">0</span>
+                </a>
+                <a class="flex items-center gap-2 text-[18px] md:text-[22px] font-medium text-on-surface hover:text-primary transition-colors" href="contact.html">
+                    <span class="material-symbols-outlined text-[24px] md:text-[28px]">headset_mic</span>
+                    <span>تواصل معنا</span>
+                </a>
+            </nav>
+            <!-- Mobile Logo -->
+            <a href="index.html" class="md:hidden flex items-center">
+                <img src="images/Logo.png" alt="Logo" class="h-14 w-auto object-contain"/>
+            </a>
+        </div>
+
+        <!-- Center: Brand Name -->
+        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+            <span class="text-[32px] md:text-[40px] font-bold text-primary tracking-tight whitespace-nowrap">نيازي</span>
+        </a>
+
+        <!-- Left side (Desktop: Logo, Mobile: Cart) -->
+        <div class="flex-1 flex justify-end items-center">
+            <!-- Desktop Logo -->
+            <a href="index.html" class="hidden md:flex items-center">
+                <img src="images/Logo.png" alt="Logo" class="h-16 md:h-20 w-auto object-contain"/>
+            </a>
+            <!-- Mobile Cart -->
+            <a href="cart.html" class="md:hidden relative inline-flex text-primary hover:opacity-70 transition">
+                <span class="material-symbols-outlined text-[32px]">local_mall</span>
+                <span class="cart-badge absolute -top-1 -right-2" style="z-index: 10;">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow px-6 md:px-12 max-w-4xl mx-auto w-full">
+        <h1 class="text-[28px] font-bold text-primary mb-8">عربة التسوق</h1>
+        
+        <div id="cart-container" class="flex flex-col gap-6">
+            <!-- Cart items will go here -->
+            <div class="text-center py-20 text-on-surface-variant">جاري التحميل...</div>
+        </div>
+
+        <div id="summary-container" class="hidden mt-10 bg-surface-container-lowest p-6 rounded-xl ambient-shadow">
+            <h3 class="text-[20px] font-bold text-primary mb-4">ملخص الطلب</h3>
+            <div class="flex justify-between text-on-surface-variant mb-2">
+                <span>المجموع الفرعي</span>
+                <span id="subtotal">0 ج.م</span>
+            </div>
+            <div class="flex justify-between text-on-surface-variant mb-4">
+                <span>تكلفة الشحن</span>
+                <span>تحدد مع خدمة العملاء</span>
+            </div>
+            <div class="w-full h-px bg-outline-variant my-4"></div>
+            <div class="flex justify-between text-[22px] font-bold text-primary mb-8">
+                <span>الإجمالي التقريبي</span>
+                <span id="total">0 ج.م</span>
+            </div>
+            
+            <button onclick="checkoutViaWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-lg flex items-center justify-center gap-3 hover:opacity-90 transition-opacity font-bold text-[18px]">
+                <span class="material-symbols-outlined">chat</span>
+                إتمام الطلب عبر واتساب
+            </button>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-white border-t border-surface-container-high shadow-lg rtl">
+        <a href="index.html" class="flex flex-col items-center gap-1 text-primary hover:opacity-70 transition">
+            <span class="material-symbols-outlined">home</span>
+            <span class="text-[10px] font-medium">الرئيسية</span>
+        </a>
+        <a href="cart.html" class="flex flex-col items-center gap-1 text-primary">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+            <span class="cart-badge">0</span>
+            <span class="text-[10px] font-medium">السلة</span>
+        </a>
+        <a href="contact.html" class="flex flex-col items-center gap-1 text-primary hover:opacity-70 transition">
+            <span class="material-symbols-outlined">chat</span>
+            <span class="text-[10px] font-medium">تواصل معنا</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        function renderCartPage() {
+            const container = document.getElementById('cart-container');
+            const summary = document.getElementById('summary-container');
+            const cart = getCart();
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20 flex flex-col items-center">
+                        <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">shopping_cart</span>
+                        <p class="text-[18px] text-on-surface-variant mb-6">عربة التسوق فارغة</p>
+                        <a href="index.html" class="bg-primary text-white px-8 py-3 rounded-full font-medium hover:bg-opacity-90 transition">تسوق الآن</a>
+                    </div>
+                `;
+                summary.classList.add('hidden');
+                return;
+            }
+
+            summary.classList.remove('hidden');
+            
+            container.innerHTML = cart.map((item, index) => {
+                const imgUrl = item.images && item.images.length > 0 ? item.images[0] : '';
+                return `
+                    <div class="flex items-center gap-4 bg-surface-container-lowest p-4 ambient-shadow rounded-lg relative">
+                        <img src="${imgUrl}" alt="${item.name}" class="w-24 h-24 object-cover rounded-md bg-surface-container-low" onerror="this.src=''; this.className='w-24 h-24 bg-surface-container-low rounded-md'"/>
+                        <div class="flex-1 flex flex-col justify-between py-1">
+                            <div>
+                                <h3 class="font-bold text-[16px] text-on-surface line-clamp-1">${item.name}</h3>
+                                <p class="text-[12px] text-on-surface-variant mt-1">
+                                    ${item.color ? `اللون: ${item.color}` : ''} 
+                                    ${item.size ? `| المقاس: ${item.size}` : ''}
+                                </p>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <span class="font-bold text-[16px] text-primary">${item.price} ج.م</span>
+                                <div class="flex items-center gap-2 border border-outline-variant rounded-md px-2 py-1">
+                                    <button onclick="updateCartItem(${index}, -1)" class="text-secondary hover:text-primary"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+                                    <span class="text-[14px] font-medium w-4 text-center">${item.quantity}</span>
+                                    <button onclick="updateCartItem(${index}, 1)" class="text-secondary hover:text-primary"><span class="material-symbols-outlined text-[18px]">add</span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="removeCartItem(${index})" class="absolute top-4 left-4 text-secondary hover:text-error transition-colors">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            const total = getCartTotal();
+            document.getElementById('subtotal').textContent = `${total} ج.م`;
+            document.getElementById('total').textContent = `${total} ج.م`;
+        }
+
+        function updateCartItem(index, delta) {
+            updateQuantity(index, delta);
+            renderCartPage();
+        }
+
+        function removeCartItem(index) {
+            removeFromCart(index);
+            renderCartPage();
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCartPage);
+    </script>
+</body>
+</html>
